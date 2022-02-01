@@ -1,0 +1,1321 @@
+                                -------------PRISE DE NOTE PENDANT LA FORMATION----------
+
+Creer une BD() en ligne de commande: symfony console d:d:c (doctrine database create)
+Creer un controller: symfony console make:controller
+    puis entrer le nom du controller
+
+===Mise en place du composant "SERCURITY":
+    *Creer l'entité *USERS
+    *Aller dans les fichiers de configurations (Config->Package->SERCURITY.yaml)
+    *Definir l'encodage
+    *Definir un providers
+    Ce pendand, on peut le generer automatiquement avec l'outil *console de php:
+        Commande: symfony console make:user (permet de creer en meme temps l'entité utilisateur et le composant SERCURITYqui va avec)
+    
+    *Creer une migration
+        Commande: symfony console make:migration
+    *Faire une migration
+        Commande: symfony console d:m:m (d:m:m = database migration migrate)
+
+==Inscription d'un utilisqteur
+    Commande:
+        "symfony console" nous permet de voir l'ensemble des commandes disponible
+        "symfony console make:registration-form" Permet de creer un formulaire d'inscription et tout ce qui va avec
+    Ce rassurer que le composant suivant est installé: "composer require symfonycasts/verify-email-bundle"
+    Aller dans RegistyrationController et modifier la methode verifyEmail(): il s'agit de changer la redirection apres réussite de verification
+    Verifier que tout est correct
+    Creer une migration
+    Supprimer la base de donnée déjà creé et Creer une nouvelle (Rappel: symfony console d:d:c)
+    Creer nos tables dans la base de donnée: (symfony console d:m:m)
+    Spécifier le mail à partir du quel on va envoyer les mails:
+        Cela se configure dans le .env
+        Configurer le composant mailer(email, password... *voir la documentaion de symfony)
+            EX: MAILER_DSN=smtp://user;pass@smtp.com:port (Fournit avec le pack d'hebergement)
+        On peut aussi utiliser un autre composant comme gmail
+            INSTALLATION:
+                composer require symfony/google-mailer
+                Indiquer la ligne suivante: gmail+smtp://USERNAME:password@defauld
+    
+    Modification du formulaire d'inscription:
+        Ouvrir: src->form->registrationFormtype
+            Ajouter les champs necessaire
+        Modifier le template qui produit l'affichage (template-registration-register.html)
+    
+    Aller dans l'onglet securité de la gestion de notre compte email qui enverra les emails et activer l'option Accès moins securisé
+
+    Utiliser 'RepeatedType::Class' pour avoir le champ de verification du mot de passe et definir les options suivante
+    'first_options' => ['label' => 'Password'],
+    'second_options' => ['label' => 'Repeat Password']
+
+== STYLISER SON FORMULAIRE AVEC BOOTSTRAP
+    utiliser le fichier twig suivant: 'form_themes: ['bootstrap_4_layout.html.twig']' et le coler dans le dossier de configuration config-package-twig.yaml
+ 
+
+==Connexion d'utilisateur
+    Pour cela on va utiliserune commande tres puissante de symfony qui va nous permettre de mettre en place les bases de notre authentification:
+        symfony console make:auth
+            avec formulaire de connexion
+        Gérer dans le controller generé dans les controllers du dossier security, la redirection si tout se passe bien (generalement ligne 55)
+
+===Creer le controller qui gere lapage de compte de l'utilisateur
+    *Pour restreindre l'accès au compte qu'au utilisateurs connecter:
+        -Aller dans le fichier "security.yaml" et ajouter tout en bas de access_control: -{ path: ^/account, roles: ROLE_USER }
+
+===Permettre à l'utilisateur de reinitialiser son mot de passe
+    --Installer le composant reset passwordà l'aide de la commande suivante: composer req symfonycasts/reset-password-bundle
+    --executer la commande symfony console make:reset-password
+    --Entrer le nom de la route ou sera rediriger l'utilisateur apres avoir reinitialiser son mot de passe
+    --email
+    --nom
+    --creer une migration: symfony console make:migration
+    --faire la migration: symfony console d:m:m
+
+===GESTION DES ADRESSES
+    --gener l'entité address: symfony console make:entity
+        *entrer le nom: address
+        *nom des champs
+            pour le champ user_id on va plutot creer un champ user de type relation et comme relation on prendra "ManyToOne"
+    --Donner les moyens à l'utilisateur de pouvoir ajouter, modifier et supprimer une adresse (Le crud des adresses).
+        * executer: symfony console make:crud
+            -preciser l'entité dont le crud sera crée (ici Address)
+            -preciser le nom de la classe controller
+        *Creer une migration: symfony console make:migration
+        *faire la migration: symfony console d:m:m
+        *au cas ou on aurai une erreur en voulant créer une adresse, ajouter la fonction suivante public function __toString(){return $this->email;} dans l'entité user
+        *enlever le add(user) dans addressType
+        *dans le controller AddressController, reccuperer l'utilisateur connecté
+        *Restrindre l'accès à add new adresse aux utilisateurs non connecté en faisant:
+            Config->package->security.yaml et ajouter une contrinte au accès_control (- { path: ^/address, roles: ROLE_USER })
+        *Ajouter l'utilisateur connecté au données reçu du formulaire:
+            $adress->setUser($user);
+
+===CREER UN MESSAGE FLASH
+
+    * $this->addFlash('address_message', 'Adresse enrégistré avec succès');
+    *ce message est reccuperé cote client par la variable: app.flashes('address_message')
+
+
+==== GESTION DES PRODUITS
+    * Créer une entité: symfony console make:entity
+        -nommer l'entité product
+        -ajouter les champs
+
+    * Créer une entité: symfony console make:entity
+        -nommer l'entité Categories
+        -ajouter les champs
+    *Créer la relation entre product et Categories
+        -nommer l'entité product
+        -ajouter un champ category de type relation manytomany
+        -
+
+    * Créer une entité: symfony console make:entity
+        -nommer l'entité TagsProduct
+        -ajouter le champ name
+        -ajouter le champ product comme relation ManyToMany
+
+    * Créer une entité: symfony console make:entity
+        -nommer l'entité RelatedProduct
+        -ajouter le champ product comme relation ManyToOne
+
+    * Créer une entité: symfony console make:entity
+        -nommer l'entité ReviewsProduct
+        -ajouter le champ note
+        -ajouter le champ comment
+        -ajouter le champ user comme relation ManyToOne
+        -ajouter le champ product comme relation ManyToOne
+
+    *Créer une migration :
+        symfony console make:migration
+    *faire la migration:
+        symfony console d:m:m
+
+
+====Creation de l'espace d'administration en utilisant easy admin
+    -Installation du package easy admin
+        * executer composer req admin
+        * Créer le dashboard: symfony console make:admin:dashboard
+        * Creer un crud des produits: symfony console make:admin:crud
+            -choisir l'entité à manager
+    -Aller dans le dashboardController et indiquer le crud à gerer: EX: yield MenuItem::linkToCrud('Product', 'fas fa-shopping-cart', Product::class);
+    -Aller dans le controller des crud creer et ajouter les champs: SlugField::new('slug')->setTargetFieldName('name'), IdField::new('id')->hideOnForm(), TextEditorField::new('description'), MoneyField::new('price'),
+            *ImageField::new('image')->setBasePath('/assets/uploads/categories/')
+                                    ->setUploadDir('/public/assets/uploads/categories/')
+                                    ->setUploadedFileNamePattern('[randomhash].[extension]')
+                                    ->setRequired(false),
+
+==== ADMINISTRATION DES PRODUITS
+    -Ajout les champs suivants à l'entité product
+        * quantity
+        * cretedAt
+        * tags de type Text
+        * slug de type string
+
+    -Supprimer les migrations deja crée ainsi que la base de donée et reprendre le processus de migration et creer une nouvelle bd
+    -Affichage des produits 
+        *Aller au controller qui va procéder à l'affichage (homeController)
+        * Injecter dans la fonction Index() le repositorie qui contien les produits (ProductRepository $repoProduct)
+        * Recuperer tout les produits: $products = $repoProduct->findAll();
+        * Recuperer les produits selon un champ = $productBestSeller = $repoProduct->findByIsBestSeller(1);
+        * Fournir les données au template en ajoutant ses lignes dans le render: 
+            'products'              => $products,
+            'productBestSeller'     => $productBestSeller,
+            'productSpecialOffer'   => $productSpecialOffer,
+            'productNewArrival'     => $productNewArrival,
+            'productFeatur'         => $productFeatur,
+
+    -Afficher les détailles d'un produit:
+        *Creer une nouvelle fonction dans le controller home:
+            /**
+            * @Route("/product/{slug}", name="product_details)
+            */
+            public function show(?Product $product): Response
+            {
+                if (!$product) {
+                    return $this->redirectToRoute("home");
+                }
+
+                return $this->render("home/single_product.html.twig", [
+                    'product'       => $product
+                ]);
+            } 
+
+        * utiliser " | raw " pour convertir les tags html dans les données
+        * utiliser " | length" pour avoir le nombre d'enregistrement
+
+
+====GESTION DU PANIER client
+    -Creer un controller qui va gérer le panier: symfony console make:controller
+        *le nommer Cart
+        *faire l'injection suivante dans la fonction index de notre controller: SessionInterface $session
+        *Creer un service qui va se charger de traiter toutes les operations lié au panier
+            **Creer un nouveau dossier dans src nommer services
+            **Creer un nouveau fichier dans ce dossier et le nommer CartServices.php
+                ===================================== Content =====================================
+                <?php
+                    namespace App\Service;
+
+                use App\Repository\ProductRepository;
+                use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+                class CartServices
+                    {
+                        
+                        private $session;
+                        private $repoProduct;
+
+                        public function __construct(SessionInterface $session, ProductRepository $repoProduct){
+                            $this->session = $session;
+                            $this->repoProduct = $repoProduct;
+                        }
+
+                        public function addToCart($id){
+                            $cart = $this->getCart();
+                            if (isset($cart[$id])) {
+                                # produit deja dans le panier
+                                $cart[$id]++;
+                            } else {
+                                # Produit n'est pas encore dans le panier
+                                $cart[$id] = 1;
+                            }
+                            $this->updateCart($cart);
+                        }
+
+                        public function deleteFromCart($id){
+                            $cart = $this->getCart();
+
+                            if (isset($cart[$id])) {
+                                if ($cart[$id] > 1) {
+                                    $cart[$id]--;
+                                } else {
+                                    unset($cart[$id]);
+                                }
+                                $this->updateCart($cart);
+                                
+                            }
+                            
+                        }
+
+                        public function deleteAllToCart($id){
+                            $cart = $this->getCart();
+                            if (isset($cart[$id])) {
+                                unset($cart[$id]);
+                                $this->updateCart($cart);
+                                
+                            }
+                        }
+
+                        public function deleteCart(){
+                            $this->updateCart([]);
+                        }
+
+                        public function updateCart($cart){
+                            $this->session->set('cart', $cart);
+                        }
+
+                        public function getCart(){
+                            return $this->session->get('cart', []);
+                        }
+
+                        public function getFullCart(){
+                            $cart = $this->getCart();
+
+                            $fullCart = [];
+                            foreach ($cart as $id => $qte) {
+                                $product = $this->repoProduct->find($id);
+
+                                if ($product) {
+                                    # produit recupéré avec succès
+
+                                    $fullCart[] = [
+                                        'quantity'      => $qte,
+                                        'product'       => $product
+                                    ];
+                                } else {
+                                    # Aucun produit trouvé
+                                    $this->deleteFromCart($id);
+                                }
+                                
+                            }
+
+                        }
+                    }
+    
+        * Utilisation du service crée:
+            **Faire une ingection dans la fonction index de CartController: CartServices $cartServices
+            **Creer des methodes à l'exemple de:
+
+            ===========================================================================
+
+                        /**
+                        * @Route("Cart/add/{id}")
+                        */
+                        public function addToCart($id, CartServices $cartServices): Response
+                        {
+                            $cartServices->addToCart($id);
+
+                            return $this->redirectToRoute('cart');
+
+                        }
+        --Afficher le panier dans le hesder de notre page
+            **utiliser les sessions:
+                Aller dans cartService et mettre les données de notre panier dans une variaable de session pour pouvoir l'utiliser dans notre header
+                    $this->session->set('cartData', $this->getFullCart());
+                aller dans le header et faire une boucle sur la variable app.session.get('d=cartData')
+
+                avoir 2 chiffres apres la virgule: round(2, 'floor')
+
+==== Creer une sauvegarde
+    --exporter les tables de la base de donnée au format json
+    --Creer un petit scripte qui va lire ses fichier json et creer des objet metiés et les envoyer directement dans la base de donnée
+    --Pour y arriver:
+        **Creer un controller simple
+            <?php
+
+                namespace App\Controller;
+
+                use App\Entity\Categories;
+                use App\Entity\Product;
+                use Doctrine\ORM\EntityManagerInterface;
+                use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+                use Symfony\Component\HttpFoundation\Response;
+                use Symfony\Component\Routing\Annotation\Route;
+
+                class DataLoaderController extends AbstractController
+                {
+                    #[Route('/data/loader', name: 'data_loader')]
+                    public function index(EntityManagerInterface $manager): Response
+                    {
+                        $file_categories = dirname(dirname(__DIR__))."\category.json";
+                        $data_categories = json_decode(file_get_contents($file_categories))[0]->rows;
+
+                        $file_products = dirname(dirname(__DIR__))."\product.json";
+                        $data_products = json_decode(file_get_contents($file_products))[0]->rows;
+
+                        dd($data_categories);
+
+                        $categories = [];
+
+                        foreach ($data_categories as $data_category) {
+                            $category = new Categories();
+                            $category->setName($data_category[1])
+                                    ->setImage($data_category[3]);
+                            $manager->persist($category);
+                            $categories[] = $category;
+                        }
+
+
+                        $products = [];
+
+                        foreach ($data_products as $data_product) {
+                            $product = new Product();
+                            $product->setName($data_product[1])
+                                    ->setDescription($data_product[2])
+                                    ->setPrice($data_product[4])
+                                    ->setIsBestSeller($data_product[5])
+                                    ->setIsNewArrival($data_product[6])
+                                    ->setIsFeatured($data_product[7])
+                                    ->setIsSpecialOffer($data_product[8])
+                                    ->setImage($data_product[9])
+                                    ->setQuantity($data_product[10])
+                                    ->setTags($data_product[11])
+                                    ->setSlug($data_product[12])
+                                    ->setCreatedAt($data_product[2]);
+                            $manager->persist($product);
+                            $products[] = $product;
+                        }
+
+                        $manager->flush();
+
+                        return $this->json([
+                            'message' => 'Welcome to your new controller!',
+                            'path' => 'src/Controller/DataLoaderController.php',
+                        ]);
+                    }
+                }
+
+
+
+====Gestion des commandes
+    **Creation des tables necéssairre
+        -table Order
+        -table OrderDetails
+    **Creer une migration en suppriment l'autre
+    **vider notre base de données: "symfony console d:d:d -f"
+    **Faire la migration: symfony console d:m:m
+    **Charger les données sauvegardés dans le controller DataLoaderController(en decommentant ce qu'il faut)
+
+
+
+====Gestion des transporteurs(facultatif)
+    *Creer l'entité carrier
+    *creer une migration
+    *migrer les données
+    *creer un Crud carrier
+    *l'ajouter dans le dashboardController: yield MenuItem::linkToCrud('Categories', 'fas fa-truck', Carrier::class);
+
+
+====Creation de la page CHECKOUT
+    *Creer le controller qui va gérer ce CHECKOUT
+    *Exiger que l'utilisateur doit etre connecter pour y accéder: Aller dans Config->package->security.yaml et ajouter la ligne suivant au access_control: - { path: ^/checkout, roles: ROLE_USER }
+    *Injecter le CartServices dans la fonction index de checkoutController
+    *Recuperer le panier dans checkoutController ($cart = $cartServices->getFullCart();) et le renvoyer à la valeur
+    *Recuperer l'utilisateur connecter $user = $this->getUser()
+    *Creer le formulaire et l'ajuster symfony console make:form
+        -Donner un nom: CheckoutType
+        -Aller dans le form généré et creer ou alors recuperer l'option user: $user = $options['user'];
+        -Ajouter les champs suivant au bulder:
+
+            ->add('address', EntityType::class, [
+                'class'     => Address::class,
+                'required'  => true,
+                'choices'   => $user->getAddresses(),
+                'multiple'  => false,
+                'expanded'  => true,
+            ])
+            ->add('information')
+
+
+        -Ajouter la fonction suivante dans l'entité address:
+            public function __toString()
+            {
+                
+                $result = $this->fullName."[spr]";
+                if ($this->getCompany()) {
+                    $result .= $this->company."[spr]";
+                }
+                $result .= $this->address."[spr]";
+                $result .= $this->complement."[spr]";
+                if ($this->getCodePostal()) {
+                    $result .= $this->codePostal." - ".$this->city."[spr]";
+                }
+                $result .= $this->country."[spr]";
+
+
+                return $result;
+
+            }
+
+        -Verifier que l'utilisateur a des produits dans le panier et qu'il poss_de au moins une adresse
+    *Creer le formulaire dans le controller checkoutController: 
+        $form = $this->createForm(CheckoutType::class, null, [
+            'user'      =>$user
+        ]);
+    *Analyser la requete qui est renvoyé:
+        -Injecter dans la fonction index du checkoutController l'objet request
+        -$form->handleRequest($request);
+        -Renvoyer à la vue: 'checkout'  => $form->createView()
+        -Ajouter les messages flash: $this->addFlash('nom_message_flash', 'Un message flash');
+    *initialiser le formulairedans la vue index u checkout : {{ form_start(checkout, {action: path('checkout_confirm')}) }}
+    *Donner une valeur par defaut au user dans la methode configureOption: 'user'      => array()
+    *ajouter le filtre suivant sur l'affichage des adresse: {{ form_widget(checkout.address) | replace({"[spr]" : "<br>"}) | raw}}
+
+
+=====Amélioration de l'ergonomie 
+
+    ** Permettre à l'utilisateur de toujour revenir à la page checkout avec ses informations toujour disponible
+        --Aller dans le checkoutController et ajoute une variable session, injecter SessionInterface dans la fonction constructeur
+        --Au lieu de verifier uniquement si le formulaire est soumit et qu'i'l est valide, verifier aussi si on deja des données dans la session: || $this->session->get('checkout_data')
+        --changer la ligne '$data = $form->getData();' par:
+            if ($this->session->get('checkout_data')) {
+                $data = $this->session->get('checkout_data');
+            } else {
+                $data = $form->getData();
+                $this->session->set('checkout_data', $data);
+            }
+        --Aller dans AddressController et ajoute une variable session, injecter SessionInterface dans la fonction constructeur
+        --faire:
+            private $session;
+
+            public function __construct( SessionInterface $session)
+            {
+                $this->session = $session;
+            }
+
+        --Dans la methode edit, apres avoire fait le flush, verifier si la session checkout_data existe
+            *si c'est le cas on fait: 
+                $data = $this->session->get('checkout_data');
+                $data['address'] = $address;
+                $this->session->set('checkout_data', $data);
+                
+                return $this->redirectToRoute('checkout_confirm');
+
+    **donner à l'utilisateur la possibilité de ne plus entrer ses choix quand il vient payer sa commande puisqu'on les à dejà sauvegardés
+        --Dans le checkoutController avant de creer le formulaire dans la fonction index, faire:
+            *
+                if ($this->session->get('checkout_data')) {
+                    return $this->redirectToRoute('checkout_confirm');
+                }
+
+            Puis:
+            * 
+                /**
+                * @Route("/checkout/edit", name=checkout_edit")
+                */
+                public function checkoutEdit():Response{
+                    $this->session->set('checkout_data', []);
+                    return $this->redirectToRoute('checkout');
+                }
+            * modifier ca: <a href="{{ path('checkout') }}" class="btn btn-fill-out mb-3">Changer d'adresse</a> par ca:<a href="{{ path('checkout_edit') }}" class="btn btn-fill-out mb-3">Changer d'adresse</a>
+            *
+
+====Creation du service pour preparer le paiement en ligne
+    --Creer le service OrderService.php
+    --Ajouter les champs suivants à l'entité Order: quantity, subTotalHT, taxe, subTotalTTC
+    --Dupliquer la t'entiter Order et renommer la copie par Cart et faire la meme chose pour CartDetail Et les Repository liés
+    --Generer un fichier de migration en supprimentl'ensien ainsi que la bd
+    --Charger nos donnée
+    --Remplire notre fichier service OrderService.php
+        <?php
+                namespace App\services;
+
+            use App\Entity\Cart;
+            use App\Entity\CartDetails;
+            use App\Entity\Order;
+            use App\Entity\OrderDetails;
+            use App\Entity\Product;
+            use Doctrine\ORM\EntityManagerInterface;
+            use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+            class OrderServices
+                {
+                    
+                    private $session;
+                    private $manager;
+
+                    public function __construct(SessionInterface $session, EntityManagerInterface $manager){
+                        $this->session = $session;
+                        $this->manager = $manager;
+                    }
+
+                    public function createOrder($cart){
+                        $order = new Order();
+
+                        $order->setReference($cart->getReference())
+                                ->setFullName($cart->getFullName())
+                                ->setDeliveryAddress($cart->getDeliveryAddress())
+                                ->setMoreInformations($cart->getMoreInformations())
+                                ->setQuantity($cart->getQuantity())
+                                ->setsubTotalHT($cart->getSubTotalHT())
+                                ->setTaxe($cart->getTaxe())
+                                ->setSubTotalTTC($cart->getSubTotalTTC())
+                                ->setUser($cart->getUser())
+                                ->setCretedAt($cart->getCreatedAt());
+
+                        $this->manager->persist($order);
+
+                        $products = $cart->getCartDetails()->getValue();
+
+                        foreach ($products as $cart_product) {
+                            $orderDetails = new OrderDetails();
+
+                            $orderDetails->setOrders($order)
+                                ->setProductName($cart_product->getProductName())
+                                ->setProductPrice($cart_product->getProductPrice())
+                                ->setQuantity($cart_product->getQuantity())
+                                ->setsubTotalHT($cart_product->getSubTotalHT())
+                                ->setTaxe($cart_product->getTaxe())
+                                ->setSubTotalTTC($cart_product->getSubTotalTTC());
+
+                            $this->manager->persist($orderDetails);
+                        }
+                        
+                        $this->manager->flush();
+
+                        return $order;
+                    }
+
+                    public function saveCart($data, $user){
+                        
+
+
+                        $cart = new Cart();
+                        $reference = $this->generateUuid();
+                        $address = $data['checkout']['address'];
+                        $informations = $data['checkout']['information'];
+
+                        $cart->setReference($reference)
+                                ->setFullName($address->getFullName())
+                                ->setDeliveryAddress($address)
+                                ->setMoreInformations($informations)
+                                ->setQuantity($data['data']['quantity_cart'])
+                                ->setsubTotalHT($data['data']['subTotalHt'])
+                                ->setTaxe($data['data']['taxe'])
+                                ->setSubTotalTTC($data['data']['subTotalTtc']/* + les frais de livraison */)
+                                ->setUser($user)
+                                ->setCretedAt(new \DateTime());
+
+                        $this->manager->persist($cart);
+
+                        $cart_details_array = [];
+
+                        foreach ($data['products'] as $products) {
+                            $cartDetails = new CartDetails();
+
+                            $subtotal = ($products['quantity'] * ($products['product']->getPrice() / 100 ));
+
+                            $cartDetails->setCarts($cart)
+                                ->setProductName($products['product']->getName())
+                                ->setProductPrice($products['product']->getPrice() / 100)
+                                ->setQuantity($products['quantity'])
+                                ->setsubTotalHT($subtotal)
+                                ->setTaxe($subtotal*0.2)
+                                ->setSubTotalTTC($subtotal*1.2);
+
+                            $this->manager->persist($cartDetails);
+                            $cart_details_array[] = $cartDetails;
+                        }
+
+                        $this->manager->flush();
+
+                        return $reference;
+                        
+                    }
+
+                    public function generateUuid(){
+                        // Initialise le générateur de nombre aleatoire Mersenne Twister
+                        mt_srand((double)microtime()*100000);
+
+                        //strtoupper : Renvoie une chaine en majuscules
+                        //uniqid : Génère un identifiant unique
+                        $charid = strtoupper(md5(uniqid(rand(), true)));
+
+                        //Générer une chaine d'un octed à partir d'un nombre
+                        $hyphen = chr(45);
+
+                        //substr : Retourne un segment de chaine
+                        $uuid = ""
+                        .substr($charid, 0, 8).$hyphen
+                        .substr($charid, 8, 4).$hyphen
+                        .substr($charid, 12, 4).$hyphen
+                        .substr($charid, 16, 4).$hyphen
+                        .substr($charid, 20, 12);
+
+                        return $uuid;
+                    }
+
+                    
+                }
+    
+
+    --Aller dans le checkoutController et ecrire le scripte de sauvegarde du panier dans la methode confirm()
+        * Ajouter après la recuperation du data: $cart['checkout'] = $data;
+        *Injecter OrderServices dans cette fonction
+        *puis: $reference = $orderServices->saveCart($cart,$user);
+        *donner une valeur par defaut au proprieté $isPaid de l'entité Cart et Order
+
+
+============================================================================================================
+==========================  MISE EN PLACE DU MODULE DE paiement AVEC STRIPE  ===============================
+============================================================================================================
+
+==== Creer un Compte stripe =====
+
+
+============================================================================================================
+==========================  MISE EN PLACE DU MODULE DE paiement AVEC STRIPE  ===============================
+============================================================================================================
+
+==== Creer un Compte stripe =====
+
+==== COnfiguration du paiement en ligne=====
+    --Aller au niveau du dashboard de notre compte stripe et cliquer sur parcourir la doc
+        *Ce qui nous interesse c'est le paiement en ligne donc on click sur accept paiement
+        *sur la doc on choisira Html pour le front et PHP pour le backend
+    --Installer stripe dans notre projet: composer require stripe/stripe-php
+    --Creer un controller symfony console make:controller Stripe\StripeCheckoutSession --no-template
+        **Remplacer dans ce controller le chemin d'acces par "/create-checkout-session"
+        **Remplacer dans ce controller le nom de la route par "create_checkout_session"
+        **Ajouter la ligne suivante dans sa fonction index: Stripe::setApiKey('sk_test_s1ICmCqGj92ssJiXR41iFoC...(Recuperer dans la doc))
+        **Oublier la deuxieme ligne de la doc et faire Return $this->json([]);
+        **y conpier le reste d'element recupéré dans la doc
+        **Aller dans .env et definir notre domaine YOUR_DOMAIN='http://localhost:8000'
+        ** L'utiliser dans notre controller en faisant: $_ENV['YOUR_DOMAIN']
+    --Creer un controller pour gerer le succes et l'echec de paiement: symfony console make:controller Stripe\StripeSuccessPayment et symfony console make:controller Stripe\StripeCancelPayment
+        **url: /stripe-payment-success       route: stripe_payment_success  pareil pour le cancel 
+    --Dans notre StripeSuccessPaymentController, utiliser les url du success et du cancel a la place de success.html et cancel.html
+        *Injecter dans sa methode index le CartServices
+            **fair apres: $cart = $cartServices->getFullCart()
+    --Charger nos produits
+        **inserer le script suivant juste avant la variable $checkout_session:
+            $line_items = [];
+            foreach($cart['products'] as $data_product){
+                $product = $data_product['product'];
+                $line_items[] = [
+                    'price_data'    => [
+                        'currency'  => 'xaf',
+                        'unit_amount'   => $product->getPrice(),
+                        'product_data'  => [
+                            'name'  => $product->getName(),
+                            'images' => [$_ENV['YOUR_DOMAIN'].'/uploads/products/'.$product->getImage()],
+                        ],
+                    ],
+                    'quantity'  => $data_product['quantity'],
+                ];
+            }
+        **Passer à la clé line_items, notre $line_items crée precédemment
+
+    --Ajouter dans notre confirm.html.twig, le block "scriptStripe" Et y inserer le script suivant: <script src="https://js.stripe.com/v3/"></script>
+        **Ajouter notre block crée dans le head de base.html.twig 
+    --Jouter un boutton de paiement avec l'id "checkout_button"
+    --initialiser un script en dessous du boutton et dans le bloc javascripts (à reccupérer dans la doc) en ajuste pour correspondre à nos url et route
+    --Dans notre StripeCheckoutSessionController, Retourner : Return $this->json(['id' => $checkout_session->id]);
+
+
+    --Reglage de la prise en compte de la prise en compte des frais de livraison
+
+        **Modifier la route de la methode index du StripeCheckoutSessionController pour quil prend en parametre la reference de la commande
+        **ET annuler l'ingection du CartServices dans cette methodepar l'ingection du panier ?Cart $cart et du OrderService
+        **enlever la ligne suivante: $cart = $cartServices->getFullCart();
+        **Et ajouter la condition
+            if (!$cart) {
+                return $this->redirectToRoute('home');
+            }
+        **Et aussi enregistrer la commande dans la base de donnée
+            $orderServices->createOrder($cart);
+        **Ajouter $line_items = $orderServices->getLineItems($cart); Apres         Stripe::setApiKey('sk_test_51K9DGBCxtVj85kL4GyEwjtVNxwF4Vp0rWxQNEzlr6mLmqeIgpTtGY74oUHCwsteyFZBEuP3QL52QhlxtYVyZKdFd002IFFLScs');
+        **Aller dans OrderService et creer la fonction getLineItems()
+            public function getLineItems($cart){
+                $cartDetails = $cart->getCartDetails();
+
+                $line_items = [];
+                foreach($cartDetails as $details){
+                    $product = $this->repoProduct->findByName($details->getProductName());
+                    $line_items[] = [
+                        'price_data'    => [
+                            'currency'  => 'xaf',
+                            'unit_amount'   => $product->getPrice() / 100,
+                            'product_data'  => [
+                                'name'  => $product->getName(),
+                                'images' => [$_ENV['YOUR_DOMAIN'].'/uploads/products/'.$product->getImage()],
+                            ],
+                        ],
+                        'quantity'  => $details->getQuantity(),
+                    ];
+                }
+
+                //Taxe
+                $line_items[] = [
+                    'price_data'    => [
+                        'currency'  => 'xaf',
+                        'unit_amount'   => $cart->getTaxe() * 100,
+                        'product_data'  => [
+                            'name'  => 'TVA(19.25)',
+                            'images' => [$_ENV['YOUR_DOMAIN'].'/uploads/products/'],
+                        ],
+                    ],
+                    'quantity'  => 1,
+                ];
+
+                //Frais de livraison
+                $line_items[] = [
+                    'price_data'    => [
+                        'currency'  => 'xaf',
+                        'unit_amount'   => 1000,
+                        'product_data'  => [
+                            'name'  => 'Frais de livraison',
+                            'images' => [$_ENV['YOUR_DOMAIN'].'/uploads/products/'],
+                        ],
+                    ],
+                    'quantity'  => 1,
+                ];
+
+                return $line_items;
+            }
+        **Faire les modifications dans StripeCheckoutSessionController
+
+    --Personnaliser nos vue success et cancel
+        **Revenir dans le StripeCheckoutSessionController et transmettre dans les urls de ces 2 controller, lidentifiant de la session crée /{CHECKOUT_SESSION_ID}
+        **Une fois que c'est fait nous allons ajouter un champ à notre table order et dans ce champ, nous enregistrons le session_id
+        **Recuperer la commande crée dans le StripeCheckoutSessionController dans une variable $order puis:
+            $order->setStripeCheckoutSessionId($checkout_session->id);
+            $manager->flush();
+        
+        **Creer un fichier de migration : symfony console make:migration
+        **faire la migration : symfony console d:m:m
+
+        **Ajouter les StripeCheckoutSessionId comme parametre dans nos 2 routes et Injecter l'entité Order, le cartServices et le manager dans leur fonction index puis
+            +++dans le success
+                if (!$order || $order->getUser() !== $this->getUser()) {
+                    return $this->redirectToRoute('home');
+                }
+
+                if (!$order->getIsPaid()) {
+                    // Commande payé
+                    $order->setIsPaid(true);
+                    $cartServices->deleteCart();
+                    $manager->flush();
+
+                    //Un mail au client
+                }
+            ++Renvoyer order au template
+        **Pour le cancel, repeter la meme chose en enlevant juste la deuxième condition
+    
+    
+
+============================================================================================================
+==========================FIN DE LA MISE EN PLACE DU MODULE DE paiement AVEC STRIPE  ===============================
+============================================================================================================
+
+==== ADMINISTRATION DES COMMANDES =====
+
+    ---Aller dans l'entité User et creer un public function getFullName(){ return $this->firstname.' '.$this->lastname;}
+
+    --- Faire : symfony console make:admin:crud
+        **Aller dans le controller crée et personnaliser les champs
+
+
+===== AFFICHAGE DES COMMANDES DANS L'ESPACE UTILISATEUR ====
+
+    ---Aller dans le controlleur qui gére l'affichage du compte de l'utilisateur
+        On peu utiliser app.user pour reccuperer les commandes de l'utilisateur mais cela nous donnera toutes les commandes hors nous avons juste besoin de commandes deja payé
+        On utilisera plutot le OrderRepository Avec sa methode findBy()
+            **On injecte donc le OrderRepository dans la metode index de AccountController
+            ** puis :
+                $order = $repoOrder->findBy(['isPaid' => true, 'user' => $this->getUser()], ['id' => 'DESC']);
+            ** On Renvoie order à la vue
+            ** Une foie dans le template qui affichera les adresses, On verifie d'abord si la variable order existe
+            **Dans le AccountController, creer une methode show dont l"url prend en parametre l'id d'une commande
+                /**
+                * @Route("/order/{id}", name="account_order_details")
+                */
+                public function show(?Order $order): Response
+                {
+                    if (!$order || $order->getUser() !== $this->getUser()) {
+                        return $this->redirectToRoute('home');
+                    }
+
+                    return $this->render('account/details_order.html.twig', [
+                        'order' => $order,
+                    ]);
+                }
+
+
+===== SECURISER L'ESPACE D'ADMINISTRATION ====
+
+    --Aller au niveau du composant security(config->package->security.yaml) et decommanter la ligne du access_control qui verifie si l'utilisateur à un role administrateur
+    --Ajouter le code suivant dans le template qui affiche le compte de l'utilisateur pour lui permettre de directemrnt accéder à son backoffice
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{path('admin')}}" class="btn btn-fill-out-dark">Accéder au backoffice</a>
+        {% endif %}
+
+
+====== AJOUT D'UN SLIDER DYNAMIQUE SUR NOTRE SITE ======
+
+    ----Creer un entité : HomeSlider
+        **Les champs: title, description, buttonMessage, buttonUrl, image, isDisplayed
+        **Creer un fichier de migration
+        **migrer les données
+    ----Creer le crud pour pouvoir le gerer depuis l'espace d'administration
+        ** symfony console make:admin:crud
+        ** Aller au niveau de HomeSliderCrudController et Remplacer la partie commentée par:
+
+            public function configureFields(string $pageName): iterable
+            {
+                return [
+                    IdField::new('id')->hideOnForm(),
+                    TextField::new('title'),
+                    TextField::new('description'),
+                    TextField::new('buttonMessage'),
+                    TextField::new('buttonUrl'),
+                    ImageField::new('image')->setBasePath('/assets/uploads/sliders/')
+                                            ->setUploadDir('/public/assets/uploads/sliders/')
+                                            ->setUploadedFileNamePattern('[randomhash].[extension]')
+                                            ->setRequired(false),
+                    BooleanField::new('isDisplayed')
+                ];
+            }
+
+    ----Aller dans le homeController
+        **Injecter le HomeSliderRepository
+        **On reccupere les slides : $homeSlider = $repoHomeSlider->findBy(['isDisplayed'=>true ])
+        **L'envoyer au template
+
+
+======AJOUT D'UNE PAGE DE CONTACTE SUR NOTRE SITE ======
+
+    ----Creer un entité : Contact
+        **Les champs: name, email, phone, subject, content, createdAt
+        **Creer un fichier de migration
+        **migrer les données
+    ----Creer le crud pour pouvoir le gerer
+        ** symfony console make:Crud
+        ** Elever toutes les autres methode du controller crée et laisser uniquement le new
+        **retirer la redirection
+        **Aller dans les templates crée et les supprimé tous à part le new
+    ----Aller dans l'entité contact et creer un constructeur pour donner une valeur par defaut au createdAt
+        **Ajouter une validation sur le champ email:
+    ----Creer le crud pour pouvoir le gerer coté admin
+        ** symfony console make:admin:Crud
+
+    ----Ajouter le champ isRead
+        **Merttre à jour notre schema bd: symfony console d:s:u -f
+    
+
+
+=====MISE EN PLACE D'UNE PAGE SHOP======
+
+    --Utiliser le homeController et y ajouter une methode shop()
+    --Creer un formulaire qui sera utiliser pour filtrer les données : symfony console make:form
+        nommer: SearchProductType
+        Dans le fichier php crée, ajouter les champs: Categories, price, tags, en indiquant en 2nd parametre pour chaque champ, le type de donnée
+                ->add('categories', EntityType::class,[
+                    'class'     => Categories::class,
+                    'label'     => false,
+                    'required'  => false,
+                    'multiple'  => true,
+                    'attr'      => [
+                        'placeholder'   => 'Min...'
+                    ]
+                ])
+                ->add('prixmin', IntegerType::class,[
+                    'required'  => false,
+                    'label'     => false,
+                    'attr'      => [
+                        'class'   => 'js-categories-multiple'
+                    ]
+                ])
+                ->add('prixmax', IntegerType::class,[
+                    'required'  => false,
+                    'label'     => false,
+                    'attr'      => [
+                        'placeholder'   => 'Min...'
+                    ]
+                ])
+                ->add('tags', TextType::class,[
+                    'label'     => false,
+                    'required'  => false,
+                    'multiple'  => true,
+                    'attr'      => [
+                        'placeholder'   => 'Tags...'
+                    ]
+                ])
+
+
+        Definir le formulaire dans la methode shop: 
+        Fournir directement le formulaire au template
+
+                /**
+                * @Route("/shop", name="shop")
+                */
+                public function shop(ProductRepository $repoProduct): Response
+                {
+                    $products = $repoProduct->findAll();
+
+                    $form = $this->createForm(SearchProductType::class, null);
+
+                    return $this->render('home/shop.html.twig', [
+                        'products'              => $products,
+                        'search'                => $form->createView()
+                    ]);
+                }
+
+            Aller dans le template et configurer l'affichage
+
+
+=====TRAITEMENT DU FORMULAIRE DE RECHERCHE =====
+
+    -- Injecter l'objet request dans la methode shop()
+    -- On fait un handleRequest et on verifie si le formulaire est soumit et qu'il est valide donc :
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+        }
+    -- Creer un objet metier pour encapsuler les données recu du formulaire
+        ** Creer un entité nommé SearchProduct
+        ** ses champs : minPrice, maxPrice, categories(type array), tags(type string)
+        ** Sanchant que nous n'allon pas stocker notre entité dans la bd, nous devons enlever les annotations suivantes :
+            -   use App\Repository\SearchProductRepository;
+                use Doctrine\ORM\Mapping as ORM;
+                et tous les ORM inclus dans ce fichier
+
+                ce qu'on garde avec les getteurs et les setteurs :
+                    private $minPrice = null;
+                    private $maxPrice = null;
+
+                    /**
+                    * @var Categories[]
+                    */
+                    private $categories = [];
+                    private $tags = null;
+        **Supprimer le SearchProductRepository
+    -- Dans le homeController, Creer une enstance de notre objetmetier juste avant le createForm dans une variable $search et passer cette variable à la place de nulle dans le createForm
+    -- Recuperer les produits qui respectent les conditions des données passées dans le formulaire
+        **Aller dans ProductRepository et creer la methode suivante :
+                /**
+                * @return Product[] Returns an array of Product objects
+                */
+                public function findWithSearch($search){
+
+                    $query = $this->createQueryBuilder('p');
+
+                    if ($search->getMinprice()) {
+                        $query = $query->andWhere('p.price > '.$search->getMinPrice()*100);
+                    }
+
+                    if ($search->getMaxPrice()) {
+                        $query = $query->andWhere('p.price < '.$search->getMaxPrice()*100);
+                    }
+
+                    if ($search->getTags()) {
+
+                        $query = $query->andWhere('p.tags like :val')
+                                        ->setParameter('val',"%{$search->getTags()}%");
+                    }
+
+                    if ($search->getCategories()) {
+                        //Ici Categorie n'est pas un champ de product alors pour accéder à ces données on va faire une jointure
+                        //entre les tables product et categories
+
+                        //joindre product à partir de la table categorie
+                        $query = $query->join("p.category", "c")
+                                        ->andWhere('c.id IN (:categories)')
+                                        ->setParameter('categories', $search->getCategories());
+                    }
+
+                    $query = $query->orderBy('p.id', 'DESC')
+                                    ->getQuery()
+                                    ->getResult();
+                    
+
+                    return $query;
+                    
+                }
+        ** Et ajouter la ligne suivante dans la methode shop() :
+            $products = $repoProduct->findWithSearch($search);
+    -- Et au finale :
+        /**
+        * @Route("/shop", name="shop")
+        */
+        public function shop(ProductRepository $repoProduct, Request $request): Response
+        {
+
+            $products = $repoProduct->findAll();
+
+            $search = new SearchProduct();
+            $form = $this->createForm(SearchProductType::class, $search);
+
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+
+                $products = $repoProduct->findWithSearch($search);
+            }
+
+            return $this->render('home/shop.html.twig', [
+                'products'              => $products,
+                'search'                => $form->createView()
+            ]);
+        }
+
+        
+============================================================================================================
+===================================  GESTION DES MAIL AVEC MAILJET  ========================================
+============================================================================================================
+
+==== Creer un Compte Mailjet =====
+
+==== Creation d'un model mailjet =====
+    Aller dans notre interface et cliquer sur model transactionnel
+        clicquer sur creer un nouveau model
+            Choisir un model et le personnaliser
+                Donner un nom : Notification
+                clicquer sur utiliser ce model
+        Une fois le model sauvegardé et publier
+    
+    Installer mailjet dans notre projet(aller sur guide pour debuter->envoyer votre premier email pour trouver la doc) :
+        composer require mailjet/mailjet-apiv3-php 
+    Trouver les clé qui permettrons à symfony d'identifier le compte mailjet associé à notre projet:
+        preference de compte->gestion de la clé API principale(dans rest Api)
+    Creer au niveau de .env des variables
+        MJ_APIKEY_PUBLIC=9b1f072f0b8a219a29dc3b92ff482308
+        MJ_APIKEY_PRIVATE=6e5245410c33e8cf9a9890a2b0cf5e32
+
+
+===== CREER LE SERVICE D'envoie de mail =====
+
+    Creer une entité nommé EmailModel
+        avec les champs : title, subject, content
+        Ces données ne serons pas envoyé en bd donc basta les annotations innutiles
+    Creer un service nommé EmailSender.php
+        y creer une methode sendEmailNotificationByMailJet(User $user, EmailModel $Email)
+            Aller sur notre dashboard mailjet et copier le code qui s'y trouve à partir de la premiere declration de variable et le coller dans notre methode
+                y ajouter nos clé privé et public definient comme variable dans .env
+                    public function sendEmailNotificationByMailJet(User $user, EmailModel $email){
+                        $mj = new Client($_ENV['MJ_APIKEY_PUBLIC'],$_ENV['MJ_APIKEY_PRIVATE'],true,['version' => 'v3.1']);
+                        $body = [
+                            'Messages' => [
+                            [
+                                'From' => [
+                                'Email' => "danicktchakouani237@gmail.com",
+                                'Name' => "DalalShop Contact"
+                                ],
+                                'To' => [
+                                [
+                                    'Email' => $user->getEmail(),
+                                    'Name' => $user->getFirstname()
+                                ]
+                                ],
+                                'TemplateID' => 3460255,
+                                'TemplateLanguage' => true,
+                                'Subject' => $email->getSubject(),
+                                'Variables' => [
+                                    'title'     => $email->getTitle(),
+                                    'content'   => $email->getContent()
+                                ]
+                            ]
+                            ]
+                        ];
+                        $response = $mj->post(Resources::$Email, ['body' => $body]);
+                        $response->success() && dd($response->getData());
+                    }
+
+        Une fois la methode crée, Aller dans ContactController et completer l'envoie d'email
+            Injecter le service EmailSender crée dans la methode new
+            Creer un objet metier user:
+                $user = (new User())
+                        ->setEmail($_ENV['EMAIL_ADMIN'])
+                        ->setFirstname($_ENV['EMAIL_FIRSTNAME'])
+                        ->setLastname($_ENV['EMAIL_LASTNAME']);
+            
+            Creer un objet metier email :
+                $email = (new EmailModel())
+                        ->setTitle("Salut ".$user->getFullName())
+                        ->setSubject("Nouveau contact de votre site web")
+                        ->setContent("<br>From : ".$contact->getEmail()
+                                    ."<br> Name : ".$contact->getName()
+                                    ."<br> Subject : ".$contact->getSubject()
+                                    ."<br><br>".$contact->getContent());
+
+            Appeler la methode sendEmailNotificationByMailJet($user, $email) de $emailSender
+
+
+
+
+
+
+============================================================================================================
+================================ FIN  GESTION DES MAIL AVEC MAILJET  =======================================
+============================================================================================================
+
+==== GESTION DE STOCK =====
+
+Le service qui gere le destockage
+    <?php 
+        namespace App\services;
+
+        use App\Entity\Order;
+        use App\Repository\ProductRepository;
+        use Doctrine\ORM\EntityManagerInterface;
+
+        class StockManagerServices{
+            
+            private $manager;
+            private $repoProduct;
+
+            public function __construct(EntityManagerInterface $manager, ProductRepository $repoProduct)
+            {
+                $this->manager = $manager;
+                $this->repoProduct = $repoProduct;
+                
+            }
+
+            public function deStock(Order $order)
+            {
+                $orderDetails = $order->getOrderDetails()->getValues();
+
+                foreach ($orderDetails as $k => $details) {
+                    //recuperer le produit
+                    $product = $this->repoProduct->findByName($details->getProduct())[0];
+
+                    //le destocker
+                    $newQuantity = $product->getQuantity() - $details->getQuantity();
+
+                    //mettre la quantité à jour
+                    $product->setQuantity($newQuantity);
+
+                    //sauvegarder les info actuelles du produit dans la bd
+                    $this->manager->flush();
+                }
+            }
+
+        }
+
+
+==== GESTION DES PAGES D'ERREUR =====
+     Installer : composer require symfony/twig-pack
+     Dans le dossier template:
+        Creer un dossier bundles
+            y creer un dossier TwigBundle
+                y creer un dossier Exception
+                    Dans ce dernier dossier, creer les fichier:
+                        -error404.html.twig
+                        -error403.html.twig
+                        -error.html.twig
+
+    Netoyer le cache de symfony : symfony console cache:clear
+
+
+
+
+============================================================================================================
+===============================  MISE EN PRODUCTION : deployement ionos  ===================================
+============================================================================================================
+
+==== Configuration apche =====
+    Supprimer le cash
+    dupliquer le dossier de notre projet pour prevoir plusieur configuration
+    faire: composer require symfony/apache-pack
+    le fichier .htaccess permet d'indiquer comment les fichiers seront routés
+    Dupliquer le fichier .env et le renommer en .env.local
+
+====Creer un depot git ====
+    Creer un depot git
+        creer un new repository nommé deployement
+        dans le projet, aller sur git ignore et verifier les fichier qui seront ignorés
+            Autoriser l'envoi du fichier bundles et du .env
+        Ouvrir un terminal et initialiser git: git init
+        Ajouter nos fichier à la sonne d'attente: git add .
+        Sauvegarder les fichiers qui sont dans la zonne d'attente: git commit -m "nom du commit"
+        Lier le depot local au depot distant:
+            faire: git remote add origin "url du depot distant"
+            faire: git remote pour voir si la liaison est reuci
+        Envoyer tous ce qu'on à en local sur le depôt distant: git push -u origin master
+        
+
+==== Petit ajustement avant deployement ====
+    --Ajustement stripe
+        Stocquer les clé public et secrete dans des variables .env
+            restituer une variable .env dans une vue:
+                le passer comme variable dans son controller et la recuperer au niveau du template EX: {{ apikeypublic }}
+
+==== Deployement sur le serveur ====
+    Ici les solutions ftp seront tres lente pour nous, on utilisera alors du ssh pour transferer nos fichiers
+    avant de commencer, faire un git add . pour envoyer nos fichier dans la zonne d'attente
+        puis faire un git commit -m "nom commit"
+        et en fin faire un git push
+
+-- Ouvrir un autre terminal et se connecter à notre hebergement:
+    faire: ssh nomUtilisateur@host puis faire entré
+        entrer le mot de passe definit pour cette utilisateur sftp(sa ne s'affiche pas mais il faut quand meme taper)
+        une fois que c'est fait, nous somme connecté à notre espace web
+        il faut maintenant cloner notre projet sur le serveur web, pour ce faire:
+            Prendre le lien github et dans notre terminal ssh, taper: git clone "lien github"
+            Entrer le username puis le mot de passe
+        Renommer le dossier qui contient notre projet:
+            taper: mv nomActuel/ newName
+        Il faut maintenant ajouter le dossier vendor
+            Venir en local, danns un terminal
+                faire: scp -r vendor InfosServeurDistant(username@host):dossierDansLeQuelOnVeutDeplacerLeVendor fire entrer
+                entrer le mot de passe
+----Connecter le domaine sur cette espace web
+    Actuelement, les utilisateurs et les autres non aucun droit, pour les donner les droit,
+        chmod 755 nomDossierProjet/
+        changer la versiobn de php si necessaire
+----Modification du fichier .en en ligne avec l'editeur vi:
+    cd nomDossierProjet
+    vi .env
+        basculer en mode insertion : touche i, echape pour sortir, echap pour quitter, pour Sauvegarder on apuit :x
+
+
+
+
+
+============================================================================================================
+============================ FIN MISE EN PRODUCTION : deployement ionos  ===================================
+============================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*pour stocker quelque chose dans la session: $session->set("cart", ["name"=>"valeur"]);
+*pour Recuperer quelque chose stocké dans le panier: $cart = $session->get("cart");
+*Fonction pour générer un id unique
+    public function generateUuid(){
+            // Initialise le générateur de nombre aleatoire Mersenne Twister
+            mt_srand((double)microtime()*100000);
+
+            //strtoupper : Renvoie une chaine en majuscules
+            //uniqid : Génère un identifiant unique
+            $charid = strtoupper(md5(uniqid(rand(), true)));
+
+            //Générer une chaine d'un octed à partir d'un nombre
+            $hyphen = chr(45);
+
+            //substr : Retourne un segment de chaine
+            $uuid = ""
+            .substr($charid, 0, 8).$hyphen
+            .substr($charid, 8, 4).$hyphen
+            .substr($charid, 12, 4).$hyphen
+            .substr($charid, 16, 4).$hyphen
+            .substr($charid, 20, 12);
+
+            return $uuid;
+        }
+    *** {{ loop.index is same as(n) ? 'element' }} : Utilisé dans une boocle pour ajouter un element lorsqu'on est à l'indice nouveau
+
+
+
+
+
+
+
+
+
+
+

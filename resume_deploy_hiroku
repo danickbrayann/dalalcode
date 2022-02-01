@@ -1,0 +1,51 @@
+
+
+==========CREER UN COMPTE HIROKU+==============
+
+===Installer le client heroku pour le system
+
+===dans son projet ouvrir le terminal et faire: heroku create 
+===faire: heroku rename newName   pour renommer notre application 
+===Configurer une variable d'environnement:
+    heroku config:set APP_ENV=prod
+===Pour la bd 
+    Aller sur le site de heroku, dans l'onglet ressource, faire une recherche sur mysql au niveau de add_ons  
+        Choisir ClearDB_MYSQL ou JawsDB MySQL(de préference) et prendre le plan gratuit
+    Creer une deuxieme variable DATABASE_URL et utiliser comme valeur celle de la variable creer par le plan gratuit
+===faire: git push heroku master
+===Creer dans le dossier de notre projet, un fichier nommé Procfile
+    Ajouter le code suivant dans ce fichier: web: heroku-php-apache2 public/
+    faire: git add -A
+    faire: git commit -m "nom du commit"
+    faire:git push heroku master
+
+en cas d'erreur faire: heroku logs --tails
+
+===Executer nos migrations sur le cloud d'heroku:
+    faire: heroku run php bin/console doctrine:migrations:migrate
+
+
+
+
+
+===Compilation des assets:
+    faire: heroku buildpacks:add heroku/nodejs
+    dans le fichier package.json, ajouter le code suivant en indiquant les version correspondant:
+        "engines": {
+            "node": "v16.13.*",
+            "npm": "8.3.*"
+        }
+    faire: git add -A
+    faire: git commit -m "nom du commit"
+    faire:git push heroku master
+
+===Configuration de apache
+    Sur la plateforme de symfony flex, rechercher apache et choisir le pack symfony/apache-pack
+    faire: symfony req apache-pack
+    faire: git add -A
+    faire: git commit -m "nom du commit"
+    faire:git push heroku master
+
+
+
+Executer du code php sans creer le fichier: php -r 'code à executer;'

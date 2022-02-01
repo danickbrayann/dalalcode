@@ -1,0 +1,28 @@
+22-01-29 23:09:52.0266684 pid:1012 tid:1 sqltools Critical: 0 : An unhandled exception occurred: System.OutOfMemoryException: Exception of type 'System.OutOfMemoryException' was thrown.
+   at System.Xml.Serialization.XmlSerializationWriterILGen.GenerateBegin()
+   at System.Xml.Serialization.TempAssembly.GenerateRefEmitAssembly(XmlMapping[] xmlMappings, Type[] types, String defaultNamespace)
+   at System.Xml.Serialization.TempAssembly..ctor(XmlMapping[] xmlMappings, Type[] types, String defaultNamespace, String location)
+   at System.Xml.Serialization.XmlSerializer.GenerateTempAssembly(XmlMapping xmlMapping, Type type, String defaultNamespace, String location)
+   at System.Xml.Serialization.XmlSerializer..ctor(Type type, String defaultNamespace)
+   at Microsoft.SqlTools.ServiceLayer.ObjectExplorer.SmoModel.NodePathGenerator.Initialize() in D:\a\1\s\src\Microsoft.SqlTools.ServiceLayer\ObjectExplorer\SmoModel\NodePathGenerator.cs:line 26
+   at Microsoft.SqlTools.ServiceLayer.ObjectExplorer.ObjectExplorerService..ctor() in D:\a\1\s\src\Microsoft.SqlTools.ServiceLayer\ObjectExplorer\ObjectExplorerService.cs:line 63
+   at lambda_method110(Closure , LifetimeContext , CompositionOperation )
+   at System.Composition.TypedParts.ActivationFeatures.DisposalFeature.<>c__DisplayClass0_0.<RewriteActivator>b__0(LifetimeContext c, CompositionOperation o)
+   at System.Composition.Hosting.Providers.ImportMany.ImportManyExportDescriptorProvider.<>c__DisplayClass3_2`1.<GetImportManyDescriptor>b__4(ExportDescriptor e)
+   at System.Linq.Enumerable.SelectArrayIterator`2.ToArray()
+   at System.Composition.Hosting.Providers.ImportMany.ImportManyExportDescriptorProvider.<>c__DisplayClass3_1`1.<GetImportManyDescriptor>b__3(LifetimeContext c, CompositionOperation o)
+   at System.Composition.Hosting.Core.CompositionOperation.Run(LifetimeContext outermostLifetimeContext, CompositeActivator compositionRootActivator)
+   at System.Composition.Hosting.Core.LifetimeContext.TryGetExport(CompositionContract contract, Object& export)
+   at System.Composition.Hosting.CompositionHost.TryGetExport(CompositionContract contract, Object& export)
+   at System.Composition.CompositionContext.GetExport(CompositionContract contract)
+   at System.Composition.CompositionContext.GetExports(Type exportType, String contractName)
+   at System.Composition.CompositionContext.GetExports(Type exportType)
+   at Microsoft.SqlTools.Extensibility.ExtensionStore.GetExports[T]() in D:\a\1\s\src\Microsoft.SqlTools.Hosting\Extensibility\ExtensionServiceProvider.cs:line 191
+   at Microsoft.SqlTools.Extensibility.ExtensionServiceProvider.<>c__DisplayClass8_0`1.<EnsureExtensionStoreRegistered>b__0() in D:\a\1\s\src\Microsoft.SqlTools.Hosting\Extensibility\ExtensionServiceProvider.cs:line 116
+   at Microsoft.SqlTools.Extensibility.RegisteredServiceProvider.<>c__DisplayClass4_0`1.<Register>b__0() in D:\a\1\s\src\Microsoft.SqlTools.Hosting\Extensibility\RegisteredServiceProvider.cs:line 74
+   at Microsoft.SqlTools.Extensibility.RegisteredServiceProvider.GetServicesImpl[T]() in D:\a\1\s\src\Microsoft.SqlTools.Hosting\Extensibility\RegisteredServiceProvider.cs:line 106
+   at Microsoft.SqlTools.Extensibility.ExtensionServiceProvider.GetServicesImpl[T]() in D:\a\1\s\src\Microsoft.SqlTools.Hosting\Extensibility\ExtensionServiceProvider.cs:line 108
+   at Microsoft.SqlTools.Extensibility.ServiceProviderBase.GetServices[T]() in D:\a\1\s\src\Microsoft.SqlTools.Hosting\Extensibility\IMultiServiceProvider.cs:line 73
+   at Microsoft.SqlTools.ServiceLayer.HostLoader.InitializeHostedServices(RegisteredServiceProvider provider, IProtocolEndpoint host) in D:\a\1\s\src\Microsoft.SqlTools.ServiceLayer\HostLoader.cs:line 179
+   at Microsoft.SqlTools.ServiceLayer.HostLoader.InitializeRequestHandlersAndServices(ServiceHost serviceHost, SqlToolsContext sqlToolsContext) in D:\a\1\s\src\Microsoft.SqlTools.ServiceLayer\HostLoader.cs:line 165
+   at Microsoft.SqlTools.ServiceLayer.HostLoader.CreateAndStartServiceHost(SqlToolsContext sqlToolsContext) in D:\a\1\s\src\Microsoft.SqlTools.ServiceLa

@@ -1,0 +1,268 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DalalCode - Accueil{% endblock %}
+
+{% block body %}
+
+
+
+        <!-- Home-->
+
+        <section id="home">
+            <div class="inner-width">
+                <div class="content">
+                    <h1>Bonjour, je suis</h1>
+                    <div class="sm">
+                        
+                        <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                        <a href="#"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="buttons">
+                        <a href="#">Contactez-moi</a>
+                        <a href="#">Telecharger cv</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About-->
+
+        <section id="about">
+            <div class="inner-width">
+                {{ include("partials/title_section.html.twig", {'name':'A-Propos'})}}
+                <div class="about-content">
+                    <img src="/assets/images/pic.png" alt="" class="about-pic">
+                    <div class="about-text">
+                        <h2>Salut! je suis Danick brayann</h2>
+                        <h3>
+                            <span>Developpeur web</span>
+                            <span>Ingenieur en management des systèmes d'information</span>
+                            <span>Administrateur de base de donnée</span>
+                        </h3>
+                        <p>
+                            De l'idée du projet jusqu'à la mise sur pied, de la conception jusqu'à la réalisation des projet d'application et de site internet, j'aide les entreprises et les particuliers à construire leur business sur internet, à développer l'image de leur marque et à faire passer leur business à l'aire du numerique.
+                        </p>
+                    </div>
+                </div>
+                <div class="skills">
+                    <div class="skill">
+                        <div class="skill-info">
+                            <span>Html</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar html"></div>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-info">
+                            <span>CSS</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="skill-bar css"></div>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-info">
+                            <span>JAVASCRIPT</span>
+                            <span>50%</span>
+                        </div>
+                        <div class="skill-bar javascript"></div>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-info">
+                            <span>PHP</span>
+                            <span>55%</span>
+                        </div>
+                        <div class="skill-bar php"></div>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-info">
+                            <span>MySQL</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar mysql"></div>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-info">
+                            <span>PYTHON</span>
+                            <span>40%</span>
+                        </div>
+                        <div class="skill-bar python"></div>
+                    </div> 
+                </div>
+            </div>
+        </section>
+
+        <!--Service-->
+
+        <section class="dark" id="services">
+            <div class="inner-width">
+                {{ include("partials/title_section.html.twig", {'name':'Services'})}}
+                <div class="services">
+                    <div class="service">
+                        <i class="icon fa fa-paint-brush" aria-hidden="true"></i>
+                        <h4>Ui design</h4>
+                        <p>Optez pour un design attrayant pour votre logiciel ou application, un site web ergonomiquement parfait qui attire les visiteurs</p>
+                    </div>
+
+                    <div class="service">
+                        <i class="icon fa fa-globe" aria-hidden="true"></i>
+                        <h4>Développement web</h4>
+                        <p>Site vitrine, site web professionnel, application web, site E-commerce, plateforme de E-learning… Dites-nous de quoi vous avez besoin.</p>
+                    </div>
+
+                    <div class="service">
+                        <i class="icon fa fa-database" aria-hidden="true"></i>
+                        <h4>Gestion de base de données</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio hic distinctio ex explicabo in! Nisi, rerum? In id, porro, ab ducimus odio voluptates dolore qui maiores, vel distinctio asperiores voluptate.</p>
+                    </div>
+
+                    <div class="service">
+                        <i class="icon fa fa-users" aria-hidden="true"></i>
+                        <h4>Community management</h4>
+                        <p>Besoin de quelqu’un pour gérer vos pages sur les réseaux sociaux ? Pour organiser des publicités sponsorisées ? Laisser nous juste un message à la section <a href="#contact" style="color: red;">contactez-Nous</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--Education-->
+
+        <section id="education">
+            <div class="inner-width">
+                {{ include("partials/title_section.html.twig", {'name':'Education et expérience'})}}
+                <div class="time-line">
+                    <div class="block">
+                        <h4> Juillet 2021</h4>
+                        <h3>Stage professionel à CINAF DIGITAL SPACE</h3>
+                        <P>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, porro nobis? Quisquam vero id neque debitis voluptates modi, aperiam, reprehenderit quae nihil fuga unde veritatis aspernatur adipisci placeat, doloremque maiores.</P>
+                    </div>
+
+                    <div class="block">
+                        <h4> 2020 - 2021</h4>
+                        <h3>Premiere année de formation en cycle ingenieur à ESIAC</h3>
+                        <P>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, porro nobis? Quisquam vero id neque debitis voluptates modi, aperiam, reprehenderit quae nihil fuga unde veritatis aspernatur adipisci placeat, doloremque maiores.</P>
+                    </div>
+
+                    <div class="block">
+                        <h4>Fevrier 2021</h4>
+                        <h3>Formation en developpement web à INNOVALAB</h3>
+                        <P>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, porro nobis? Quisquam vero id neque debitis voluptates modi, aperiam, reprehenderit quae nihil fuga unde veritatis aspernatur adipisci placeat, doloremque maiores.</P>
+                    </div>
+
+                    <div class="block">
+                        <h4>2019 - 2020</h4>
+                        <h3>Deuxième année de classe preparatoire à ESIAC</h3>
+                        <P>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, porro nobis? Quisquam vero id neque debitis voluptates modi, aperiam, reprehenderit quae nihil fuga unde veritatis aspernatur adipisci placeat, doloremque maiores.</P>
+                    </div>
+
+                    <div class="block">
+                        <h4>2018 - 2019</h4>
+                        <h3>Première année de classe preparatoire à ESIAC</h3>
+                        <P>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, porro nobis? Quisquam vero id neque debitis voluptates modi, aperiam, reprehenderit quae nihil fuga unde veritatis aspernatur adipisci placeat, doloremque maiores.</P>
+                    </div>
+
+                    <div class="block">
+                        <h4>2017 - 2018</h4>
+                        <h3>Baccalaureat D: LYCEE BILINGUE DE BABOUANTOU</h3>
+                        <P>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, porro nobis? Quisquam vero id neque debitis voluptates modi, aperiam, reprehenderit quae nihil fuga unde veritatis aspernatur adipisci placeat, doloremque maiores.</P>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--WORKS-->
+
+        <section id="works" class="dark">
+            <div class="inner-width">
+                {{ include("partials/title_section.html.twig", {'name':'Mes réalisation'})}}
+                <div class="works">
+                    <a href="/assets/images/works/1.jpg" class="work">
+                        <img src="/assets/images/works/1.jpg" alt="">
+                        <div class="info">
+                            <h3>Work title</h3>
+                            <div class="cat">Categorie</div>
+                        </div>
+                    </a>
+
+                    <a href="/assets/images/works/2.jpg" class="work">
+                        <img src="/assets/images/works/2.jpg" alt="">
+                        <div class="info">
+                            <h3>Work title</h3>
+                            <div class="cat">Categorie</div>
+                        </div>
+                    </a>
+
+                    <a href="/assets/images/works/3.jpg" class="work">
+                        <img src="/assets/images/works/3.jpg" alt="">
+                        <div class="info">
+                            <h3>Work title</h3>
+                            <div class="cat">Categorie</div>
+                        </div>
+                    </a>
+
+                    <a href="/assets/images/works/4.jpg" class="work">
+                        <img src="/assets/images/works/4.jpg" alt="">
+                        <div class="info">
+                            <h3>Work title</h3>
+                            <div class="cat">Categorie</div>
+                        </div>
+                    </a>
+
+                    <a href="/assets/images/works/5.jpg" class="work">
+                        <img src="/assets/images/works/5.jpg" alt="">
+                        <div class="info">
+                            <h3>Work title</h3>
+                            <div class="cat">Categorie</div>
+                        </div>
+                    </a>
+
+                    <a href="/assets/images/works/6.jpg" class="work">
+                        <img src="/assets/images/works/6.jpg" alt="">
+                        <div class="info">
+                            <h3>Work title</h3>
+                            <div class="cat">Categorie</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!--Contact-->
+
+        <section id="contact">
+            <div class="inner-width">
+                {{ include("partials/title_section.html.twig", {'name':'Contactez-Moi'})}}
+                <div class="contact-info">
+                    <div class="item">
+                        <i class="fas fa-monile-alt"></i>
+                        +237 698 184 706
+                    </div>
+
+                    <div class="item">
+                        <i class="fas fa-envelope"></i>
+                        danickdjiyap@gmail.com
+                    </div>
+
+                    <div class="item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Douala, Cameroun
+                    </div>
+                </div>
+
+                <form action="#" class="contact-form">
+                    <input type="text" name="fullname" placeholder="Nom complete" class="nameZone">
+                    <input type="email" name="email" placeholder="Votre email" class="emailZone">
+                    <input type="text" name="objet" placeholder="Objet" class="subjectZone">
+                    <textarea name="massage" class="messageZone" placeholder="Votre message"></textarea>
+                    <input type="submit" value="Envoyer" class="btn">
+                </form>
+            </div>
+        </section>
+
+{% endblock %}
+
