@@ -13,6 +13,7 @@
         Choisir ClearDB_MYSQL ou JawsDB MySQL(de préference) et prendre le plan gratuit
     Creer une deuxieme variable DATABASE_URL et utiliser comme valeur celle de la variable creer par le plan gratuit
 ===faire: git push heroku master
+    en cas d'erreur faire: heroku git:remote -a yourapp
 ===Creer dans le dossier de notre projet, un fichier nommé Procfile
     Ajouter le code suivant dans ce fichier: web: heroku-php-apache2 public/
     faire: git add -A
