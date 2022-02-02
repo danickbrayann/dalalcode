@@ -453,13 +453,13 @@ section.dark .section-title::after{
 .contact-info .item:hover{
     background-color: #48dbfb;
 }
-.contact-form{
-    display: flex;
+.contact-form1{
+    display: block;
     justify-content: space-between;
     flex-wrap: wrap;
 }
-.contact-form input,
-.contact-form textarea{
+.contact-form1 input,
+.contact-form1 textarea{
     width: 100%;
     height: 50px;
     margin: 10px 0;
@@ -480,7 +480,7 @@ section.dark .section-title::after{
     resize: vertical;
 }
 
-.contact-form .btncss{
+.contact-form1 .btncss{
     width: 150px;
     background-color: transparent;
     color: #48dbfb;
@@ -491,7 +491,7 @@ section.dark .section-title::after{
     cursor: pointer;
     transition: .3s linear;
 }
-.contact-form .btncss:hover{
+.contact-form1 .btncss:hover{
     background-color: #48dbfb;
     color: #fff;
 }

@@ -7,17 +7,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class ContactType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('fullname', TextType::class, ['attr' => ['placeholder' => 'Nom complet']])
-            ->add('email', TextType::class, ['attr' => ['placeholder' => 'Votre email']])
-            ->add('object', TextType::class, ['attr' => ['placeholder' => 'Objet']])
-            ->add('content', TextareaType::class, ['attr' => ['placeholder' => 'Votre message']])
+        ->add('fullname', TextType::class, ['attr' => ['placeholder' => 'Nom complet']])
+        ->add('email', TextType::class, ['attr' => ['placeholder' => 'Votre email']])
+        ->add('object', TextType::class, ['attr' => ['placeholder' => 'Objet']])
+        ->add('content', TextType::class, ['attr' => ['placeholder' => 'Votre message']])
         ;
     }
 

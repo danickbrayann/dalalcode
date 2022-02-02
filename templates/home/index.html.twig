@@ -232,17 +232,23 @@
                     </div>
                 </div>
 
-                <div class="contact-form">
-                    
+                <div class="contact-form1">
                     {{ form_start(form) }}
-
-                        {{ form_widget(form.fullname) }}
-                    
-                        {{ form_row(form.email) }}
-                        {{ form_row(form.object) }}
-                        {{ form_row(form.content) }}
-                        <button class="btncss">Envoyer</button>
+                    <div class="row">
+                        <div class="nameZone">
+                            {{ form_row(form.fullname) }}
+                        </div>
+                        <div class="emailZone">
+                            {{ form_row(form.email) }}
+                        </div>
                     </div>
+                    <div class="Zone">
+                        {{ form_row(form.object) }}
+                    </div>
+                    <div class="messageZone">
+                        {{ form_row(form.content) }}
+                    </div>
+                        <button class="btncss">Envoyer</button>
 
                     {{ form_end(form) }}
                 </div>
