@@ -179,55 +179,33 @@
 
         <section id="works" class="dark">
             <div class="inner-width">
-                {{ include("partials/title_section.html.twig", {'name':'Mes réalisation'})}}
+                {{ include("partials/title_section.html.twig", {'name':'Mes réalisations'})}}
                 <div class="works">
                     <a href="/assets/images/works/1.jpg" class="work">
                         <img src="/assets/images/works/1.jpg" alt="">
                         <div class="info">
-                            <h3>Work title</h3>
-                            <div class="cat">Categorie</div>
+                            <h3>Gestion d'une entreprise de location</h3>
+                            <div class="cat">Application web</div>
                         </div>
                     </a>
 
                     <a href="/assets/images/works/2.jpg" class="work">
                         <img src="/assets/images/works/2.jpg" alt="">
                         <div class="info">
-                            <h3>Work title</h3>
-                            <div class="cat">Categorie</div>
+                            <h3>Plateforme de vente en ligne</h3>
+                            <div class="cat">Site E-commerce</div>
                         </div>
                     </a>
 
                     <a href="/assets/images/works/3.jpg" class="work">
                         <img src="/assets/images/works/3.jpg" alt="">
                         <div class="info">
-                            <h3>Work title</h3>
-                            <div class="cat">Categorie</div>
+                            <h3>Site web professionnel</h3>
+                            <div class="cat">Site internet</div>
                         </div>
                     </a>
 
-                    <a href="/assets/images/works/4.jpg" class="work">
-                        <img src="/assets/images/works/4.jpg" alt="">
-                        <div class="info">
-                            <h3>Work title</h3>
-                            <div class="cat">Categorie</div>
-                        </div>
-                    </a>
 
-                    <a href="/assets/images/works/5.jpg" class="work">
-                        <img src="/assets/images/works/5.jpg" alt="">
-                        <div class="info">
-                            <h3>Work title</h3>
-                            <div class="cat">Categorie</div>
-                        </div>
-                    </a>
-
-                    <a href="/assets/images/works/6.jpg" class="work">
-                        <img src="/assets/images/works/6.jpg" alt="">
-                        <div class="info">
-                            <h3>Work title</h3>
-                            <div class="cat">Categorie</div>
-                        </div>
-                    </a>
                 </div>
             </div>
         </section>
@@ -254,13 +232,20 @@
                     </div>
                 </div>
 
-                <form action="#" class="contact-form">
-                    <input type="text" name="fullname" placeholder="Nom complete" class="nameZone">
-                    <input type="email" name="email" placeholder="Votre email" class="emailZone">
-                    <input type="text" name="objet" placeholder="Objet" class="subjectZone">
-                    <textarea name="massage" class="messageZone" placeholder="Votre message"></textarea>
-                    <input type="submit" value="Envoyer" class="btn">
-                </form>
+                <div class="contact-form">
+                    
+                    {{ form_start(form) }}
+
+                        {{ form_widget(form.fullname) }}
+                    
+                        {{ form_row(form.email) }}
+                        {{ form_row(form.object) }}
+                        {{ form_row(form.content) }}
+                        <button class="btncss">Envoyer</button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
             </div>
         </section>
 

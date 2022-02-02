@@ -480,7 +480,7 @@ section.dark .section-title::after{
     resize: vertical;
 }
 
-.contact-form .btn{
+.contact-form .btncss{
     width: 150px;
     background-color: transparent;
     color: #48dbfb;
@@ -491,7 +491,7 @@ section.dark .section-title::after{
     cursor: pointer;
     transition: .3s linear;
 }
-.contact-form .btn:hover{
+.contact-form .btncss:hover{
     background-color: #48dbfb;
     color: #fff;
 }
